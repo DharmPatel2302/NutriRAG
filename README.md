@@ -2,7 +2,7 @@
 
 NutriRAG is a production-grade Retrieval-Augmented Generation (RAG) system built over *Human Nutrition (2020 Edition)* (1,200+ pages, 1,688 ingested vector chunks). It combines **FastAPI**, **Groq Llama-3.3-70B**, **Supabase pgvector (HNSW Indexing)**, and a **Vite React SPA** to deliver fast, domain-specific answers with interactive, click-to-pin citation tooltips.
 
-[Problem](#-the-problem) · [Solution](#-the-solution) · [Live Links](#-live-production-links) · [Features](#-features) · [Architecture](#-complete-end-to-end-rag-architecture) · [Tech Stack](#-tech-stack--dependencies) · [Setup](#-local-setup--development) · [License](#-license)
+[Problem](#-the-problem) · [Solution](#-the-solution) · [Live Links](#-live-production-links) · [Features](#-features) · [Demo](#-Demo) · [Architecture](#-complete-end-to-end-rag-architecture) · [Tech Stack](#-tech-stack--dependencies) · [Setup](#-local-setup--development) · [License](#-license)
 
 ---
 
