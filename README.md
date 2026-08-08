@@ -1,4 +1,4 @@
-# 🥗 NutriRAG — Nutrition Science AI Assistant
+# NutriRAG — Nutrition Science AI Assistant
 
 NutriRAG is a production-grade Retrieval-Augmented Generation (RAG) system built over *Human Nutrition (2020 Edition)* (1,200+ pages, 1,688 ingested vector chunks). It combines **FastAPI**, **Groq Llama-3.3-70B**, **Supabase pgvector (HNSW Indexing)**, and a **Vite React SPA** to deliver fast, domain-specific answers with interactive, click-to-pin citation tooltips.
 
@@ -7,6 +7,8 @@ NutriRAG is a production-grade Retrieval-Augmented Generation (RAG) system built
 ---
 
 ## 🚧 The Problem
+
+![Problem](public/img1.png)
 
 Large reference documents don't fit inside an LLM's context window — you can't just paste a textbook into ChatGPT and ask it questions.
 
@@ -37,7 +39,7 @@ This is the core idea of Retrieval-Augmented Generation (RAG): trade "dump every
 
 - **Frontend Application (Vercel Edge)**: [https://nutri-rag.vercel.app/](https://nutri-rag.vercel.app/)
 - **Backend API Docs (Render)**: [https://nutrirag-backend.onrender.com/docs](https://nutrirag-backend.onrender.com/docs)
-- **Backend Health Endpoint**: [https://nutrirag-backend.onrender.com/health](https://nutrirag-backend.onrender.com/health)
+
 
 ---
 
@@ -45,23 +47,36 @@ This is the core idea of Retrieval-Augmented Generation (RAG): trade "dump every
 
 - 💬 **Conversational chat UI** — continuous thread, suggested starter questions, dark/light mode
 - 📚 **Grounded answers** — every response is generated only from retrieved textbook passages, never the model's general knowledge
-- 🔗 **Interactive citations** — inline `[1]`, `[2]` markers link to hoverable/clickable source cards showing page number, match %, and excerpt
 - ⚡ **Fast retrieval** — HNSW-indexed vector search over 1,688 chunks in Supabase pgvector (`< 15ms`)
 - 🌓 **Dual theme** — persisted dark/light mode, OS-preference aware
 - 🔁 **Resilient UX** — retry-on-failure, animated multi-stage loading indicator, new-chat reset
 
 ---
 
+## 🎬 Demo
+### Home Page
+![Home Page](public/img3.png)
+
+### Chat
+![Chat](public/img4.png)
+
+### Citation
+![Citation](public/img5.png)
+
+### Chunking Details
+![Chunk](public/img6.png)
+
+### Grounded & Relevance
+![Relevance](public/img7.png)
+
+### Dual Theme
+![Theme](public/img8.png)
+
 ## 🗺️ Complete End-to-End RAG Architecture
 
-![NutriRAG Complete Architecture](public/architecture.png)
+![NutriRAG Complete Architecture](public/img2.png)
 
-```
-[1. User Input] ➔ [2. Vite React SPA (Vercel)] ➔ [3. FastAPI REST API (Render)] ➔ [4. Supabase pgvector]
-                                                                                          │
-                                                                                          ▼
-[7. Typewriter UI] ⬅️ [6. Groq Llama-3.3 Engine] ⬅️ [5. RAG Prompt Formatter] ⬅️ [Top 5 HNSW Chunks]
-```
+
 
 ### Step-by-Step Data Flow ("Who Does What")
 
@@ -156,9 +171,9 @@ NutriRAG/
 │   │   └── api.js
 │   └── .env.example
 ├── supabase/
-│   └── schema.sql             # pgvector table + HNSW index + match_chunks RPC
+│   └── schema.sql      # pgvector table + HNSW index + match_chunks RPC
 ├── public/
-│   └── architecture.png       # Generated architecture diagram visual
+│   └── img.png         # Imgs for Readme file
 └── README.md
 ```
 
@@ -194,9 +209,7 @@ Run `supabase/schema.sql` in the Supabase SQL Editor to enable `pgvector`, creat
 
 **Dharm Patel**
 - GitHub: [@DharmPatel2302](https://github.com/DharmPatel2302)
-
+- LinkedIn: [Dharm Patel](https://www.linkedin.com/in/dharm-patel-2aa66427b/)
+ 
 ---
 
-## 📜 License
-
-Distributed under the MIT License. Built for education and portfolio showcase.

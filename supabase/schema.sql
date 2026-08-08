@@ -1,4 +1,4 @@
--- Enable the vector extension to work with embeddings
+-- Enable vector extension
 CREATE EXTENSION IF NOT EXISTS vector;
 
 -- Create document_chunks table
