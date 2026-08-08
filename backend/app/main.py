@@ -20,11 +20,10 @@ app = FastAPI(
 _query_cache: Dict[Tuple[str, int], QueryResponse] = {}
 MAX_CACHE_ENTRIES = 500
 
-# CORS middleware configuration
-origins = [FRONTEND_URL] if FRONTEND_URL else ["*"]
+# CORS middleware configuration - allow all origins so Vercel can always communicate smoothly
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
