@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { askQuestion } from "../api";
 
 const STORAGE_KEY = "nutrirag_chat_messages";
@@ -7,7 +7,19 @@ export function useChat() {
   const [messages, setMessages] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : [];
+      if (!saved) return [];
+      const parsed = JSON.parse(saved);
+      // Clean up any stuck 'thinking' or 'streaming' messages from previous failed sessions
+      return parsed.map((msg) => {
+        if (msg.status === "thinking" || msg.status === "streaming") {
+          return {
+            ...msg,
+            status: "error",
+            error: "The connection was interrupted. Please retry your question.",
+          };
+        }
+        return msg;
+      });
     } catch {
       return [];
     }
