@@ -1,26 +1,12 @@
-# NutriRAG — Nutrition Science AI Assistant
+# 🥗 NutriRAG — Nutrition Science AI Assistant
 
 NutriRAG is a production-grade Retrieval-Augmented Generation (RAG) system built over *Human Nutrition (2020 Edition)* (1,200+ pages, 1,688 ingested vector chunks). It combines **FastAPI**, **Groq Llama-3.3-70B**, **Supabase pgvector (HNSW Indexing)**, and a **Vite React SPA** to deliver fast, domain-specific answers with interactive, click-to-pin citation tooltips.
 
-<p align="center">
-  <a href="#-the-problem">Problem</a> ·
-  <a href="#-the-solution">Solution</a> ·
-  <a href="#-live-production-links">Live Links</a> ·
-  <a href="#-features">Features</a> ·
-  <a href="#-demo">Demo</a> ·
-  <a href="#-complete-end-to-end-rag-architecture">Architecture</a> ·
-  <a href="#-tech-stack--dependencies">Tech Stack</a> ·
-  <a href="#-local-setup--development">Setup</a> ·
-  <a href="#-license">License</a>
-</p>
+[Problem](#-the-problem) · [Solution](#-the-solution) · [Live Links](#-live-production-links) · [Features](#-features) · [Architecture](#-complete-end-to-end-rag-architecture) · [Tech Stack](#-tech-stack--dependencies) · [Project Structure](#-project-structure) · [Setup](#-local-setup--development) · [License](#-license)
 
 ---
 
 ## 🚧 The Problem
-
-<p align="center">
-  <img src="public/img1.png" width="450">
-</p>
 
 Large reference documents don't fit inside an LLM's context window — you can't just paste a textbook into ChatGPT and ask it questions.
 
@@ -51,7 +37,7 @@ This is the core idea of Retrieval-Augmented Generation (RAG): trade "dump every
 
 - **Frontend Application (Vercel Edge)**: [https://nutri-rag.vercel.app/](https://nutri-rag.vercel.app/)
 - **Backend API Docs (Render)**: [https://nutrirag-backend.onrender.com/docs](https://nutrirag-backend.onrender.com/docs)
-
+- **Backend Health Endpoint**: [https://nutrirag-backend.onrender.com/health](https://nutrirag-backend.onrender.com/health)
 
 ---
 
@@ -59,36 +45,21 @@ This is the core idea of Retrieval-Augmented Generation (RAG): trade "dump every
 
 - 💬 **Conversational chat UI** — continuous thread, suggested starter questions, dark/light mode
 - 📚 **Grounded answers** — every response is generated only from retrieved textbook passages, never the model's general knowledge
+- 🔗 **Interactive citations** — inline `[1]`, `[2]` markers link to hoverable/clickable source cards showing page number, match %, and excerpt
 - ⚡ **Fast retrieval** — HNSW-indexed vector search over 1,688 chunks in Supabase pgvector (`< 15ms`)
 - 🌓 **Dual theme** — persisted dark/light mode, OS-preference aware
 - 🔁 **Resilient UX** — retry-on-failure, animated multi-stage loading indicator, new-chat reset
 
 ---
 
-## 🎬 Demo
-### Home Page
-![Home Page](public/img3.png)
-
-### Chat
-![Chat](public/img4.png)
-
-### Citation
-![Citation](public/img5.png)
-
-### Chunking Details
-![Chunk](public/img6.png)
-
-### Grounded & Relevance
-![Relevance](public/img7.png)
-
-### Dual Theme
-![Theme](public/img8.png)
-
 ## 🗺️ Complete End-to-End RAG Architecture
 
-![NutriRAG Complete Architecture](public/img2.png)
-
-
+```
+[1. User Input] ➔ [2. Vite React SPA (Vercel)] ➔ [3. FastAPI REST API (Render)] ➔ [4. Supabase pgvector]
+                                                                                          │
+                                                                                          ▼
+[7. Typewriter UI] ⬅️ [6. Groq Llama-3.3 Engine] ⬅️ [5. RAG Prompt Formatter] ⬅️ [Top 5 HNSW Chunks]
+```
 
 ### Step-by-Step Data Flow ("Who Does What")
 
@@ -148,45 +119,55 @@ Instead of brute-force `Flat` vector search (`O(N)` time complexity), NutriRAG u
 
 ```
 NutriRAG/
+├── .gitignore
+├── Human-Nutrition-2020-Edition-1598491699.pdf
+├── README.md
+├── icon.png
 ├── backend/
-│   ├── app/
-│   │   ├── main.py            # FastAPI app — routes: /query, /ingest, /health
-│   │   ├── config.py          # env vars (Supabase, Groq/HF keys)
-│   │   ├── models.py          # Pydantic request/response schemas
-│   │   ├── embedding.py       # all-mpnet-base-v2 loading + embed_text()
-│   │   ├── chunking.py        # spaCy sentence chunking (10-sentence groups)
-│   │   ├── llm.py             # LLM generation (Groq client)
-│   │   ├── ingest.py          # PDF → chunks → embeddings → Supabase
-│   │   ├── retrieval.py       # Supabase RPC (match_chunks) similarity search
-│   │   └── prompt.py          # prompt_formatter() with citation instructions
-│   ├── requirements.txt
-│   └── .env.example
+│   ├── Dockerfile             # Multi-stage Docker container build for Render
+│   ├── requirements.txt       # Python dependencies
+│   └── app/
+│       ├── chunking.py        # spaCy sentence chunking (10-sentence groups)
+│       ├── config.py          # Environment configuration & keys
+│       ├── embedding.py       # all-mpnet-base-v2 vector embeddings
+│       ├── ingest.py          # PDF parsing & Supabase vector insertion
+│       ├── llm.py             # Groq LLM API integration
+│       ├── main.py            # FastAPI REST API endpoints (/query, /ingest, /health)
+│       ├── models.py          # Pydantic data schemas
+│       ├── prompt.py          # Prompt augmentation with citation rules
+│       └── retrieval.py       # Supabase RPC match_chunks vector search
 ├── frontend/
-│   ├── src/
-│   │   ├── App.jsx
-│   │   ├── hooks/
-│   │   │   ├── useTheme.js
-│   │   │   └── useChat.js
-│   │   ├── components/
-│   │   │   ├── Header.jsx
-│   │   │   ├── EmptyState.jsx
-│   │   │   ├── ChatThread.jsx
-│   │   │   ├── MessageBubble.jsx
-│   │   │   ├── AnswerRenderer.jsx
-│   │   │   ├── CitationTag.jsx
-│   │   │   ├── SourceList.jsx / SourceCard.jsx
-│   │   │   ├── ThinkingIndicator.jsx
-│   │   │   ├── ErrorBubble.jsx
-│   │   │   ├── ChatInput.jsx
-│   │   │   ├── Toast.jsx
-│   │   │   └── UploadPDFModal.jsx
-│   │   └── api.js
-│   └── .env.example
-├── supabase/
-│   └── schema.sql      # pgvector table + HNSW index + match_chunks RPC
-├── public/
-│   └── img.png         # Imgs for Readme file
-└── README.md
+│   ├── index.html             # HTML entry point with favicon metadata
+│   ├── package.json           # Frontend dependencies & scripts
+│   ├── public/
+│   │   └── icon.png           # Website favicon brand asset
+│   └── src/
+│       ├── App.jsx            # Main React application shell
+│       ├── api.js             # API client for backend REST communication
+│       ├── index.css          # Full-widescreen design system & CSS tokens
+│       ├── main.jsx           # React DOM root mounting
+│       ├── components/
+│       │   ├── AnswerRenderer.jsx  # Markdown parser & citation renderer
+│       │   ├── ChatBox.jsx         # Chat container layout
+│       │   ├── ChatInput.jsx       # Input field & send action
+│       │   ├── ChatThread.jsx      # Message thread renderer
+│       │   ├── CitationTag.jsx     # Click-to-pin interactive popover badge
+│       │   ├── EmptyState.jsx      # Minimalist hero welcome & question chips
+│       │   ├── ErrorBubble.jsx     # Error state & retry trigger
+│       │   ├── Header.jsx          # Header navigation & theme toggle
+│       │   ├── Icons.jsx           # Custom SVG vector icon library
+│       │   ├── MessageBubble.jsx   # Individual user & assistant message bubbles
+│       │   ├── SourceCard.jsx      # Source detail card component
+│       │   ├── SourceList.jsx      # Expandable source citations list
+│       │   ├── ThinkingIndicator.jsx # Multi-stage animated loading state
+│       │   ├── Toast.jsx           # Transient feedback toast
+│       │   └── UploadPDF.jsx       # Document upload modal dialog
+│       └── hooks/
+│           ├── useChat.js          # Chat state management & typewriter streaming
+│           └── useTheme.js         # Dark/Light theme switching & persistence
+├── public/                     # Documentation media assets
+└── supabase/
+    └── schema.sql              # Supabase pgvector schema, HNSW index & RPC function
 ```
 
 ---
@@ -221,7 +202,9 @@ Run `supabase/schema.sql` in the Supabase SQL Editor to enable `pgvector`, creat
 
 **Dharm Patel**
 - GitHub: [@DharmPatel2302](https://github.com/DharmPatel2302)
-- LinkedIn: [Dharm Patel](https://www.linkedin.com/in/dharm-patel-2aa66427b/)
- 
+
 ---
 
+## 📜 License
+
+Distributed under the MIT License. Built for education and portfolio showcase.
