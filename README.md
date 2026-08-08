@@ -8,7 +8,9 @@ NutriRAG is a production-grade Retrieval-Augmented Generation (RAG) system built
 
 ## 🚧 The Problem
 
-![Problem](public/img1.png)
+<p align="center">
+  <img src="public/img1.png" width="850">
+</p>
 
 Large reference documents don't fit inside an LLM's context window — you can't just paste a textbook into ChatGPT and ask it questions.
 
