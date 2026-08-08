@@ -2,14 +2,24 @@
 
 NutriRAG is a production-grade Retrieval-Augmented Generation (RAG) system built over *Human Nutrition (2020 Edition)* (1,200+ pages, 1,688 ingested vector chunks). It combines **FastAPI**, **Groq Llama-3.3-70B**, **Supabase pgvector (HNSW Indexing)**, and a **Vite React SPA** to deliver fast, domain-specific answers with interactive, click-to-pin citation tooltips.
 
-[Problem](#-the-problem) · [Solution](#-the-solution) · [Live Links](#-live-production-links) · [Features](#-features) · [Demo](#-Demo) · [Architecture](#-complete-end-to-end-rag-architecture) · [Tech Stack](#-tech-stack--dependencies) · [Setup](#-local-setup--development) · [License](#-license)
+<p align="center">
+  <a href="#-the-problem">Problem</a> ·
+  <a href="#-the-solution">Solution</a> ·
+  <a href="#-live-production-links">Live Links</a> ·
+  <a href="#-features">Features</a> ·
+  <a href="#-demo">Demo</a> ·
+  <a href="#-complete-end-to-end-rag-architecture">Architecture</a> ·
+  <a href="#-tech-stack--dependencies">Tech Stack</a> ·
+  <a href="#-local-setup--development">Setup</a> ·
+  <a href="#-license">License</a>
+</p>
 
 ---
 
 ## 🚧 The Problem
 
 <p align="center">
-  <img src="public/img1.png" width="850">
+  <img src="public/img1.png" width="450">
 </p>
 
 Large reference documents don't fit inside an LLM's context window — you can't just paste a textbook into ChatGPT and ask it questions.
