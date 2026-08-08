@@ -2,6 +2,7 @@ fastapi
 uvicorn[standard]
 sentence-transformers
 transformers
+huggingface_hub
 groq
 supabase
 pymupdf
